@@ -26,7 +26,7 @@ def catchTermination(unit,state, cb_data):
 			del pipeline[0] # Remove the current stage of the pipeline 
 			if(len(pipeline) !=0): # If there is another stage then send it for execution
 				cb_data[CURR_LABEL][indexPipeline]+=1
-				cb_data[REPORT_LABEL].plain("Sending stage " + str(cb_data[CURR_LABEL][indexPipeline]) + "of pipeline "+ str(indexPipeline+1) + " for execution")
+				print("Sending stage " + str(cb_data[CURR_LABEL][indexPipeline]) + " of pipeline "+ str(indexPipeline+1) + " for execution\n")
 				units = cb_data[UM_LABEL].submit_units(pipeline[0])
 				for item in units:
                      			map[item.uid] = indexPipeline
@@ -51,6 +51,6 @@ def waitCUs(monitor):
 	Wait Until the CUs counter in monitorp[COUNTER_LABEL] goes to zero
 	'''
 	while monitor[COUNTER_LABEL] !=0:
-                monitor[REPORT_LABEL].plain("# of remaining CUs: " + str(monitor[COUNTER_LABEL]))
+                print("# of remaining CUs: " + str(monitor[COUNTER_LABEL])+"\n")
                 time.sleep(10)                           
-	monitor[REPORT_LABEL].info("All the CUs have been completed")
+	print("All the CUs have been completed\n")
