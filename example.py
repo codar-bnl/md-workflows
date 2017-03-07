@@ -27,13 +27,13 @@ if __name__ == '__main__':
     report = ru.LogReporter(name='radical.pilot')
     report.title('Getting Started (RP version %s)' % rp.version)
     # use the resource specified as argument, fall back to localhost
-    resource = "ornl.titan_lib" # Type of resource
+    resource = "ornl.titan" # Type of resource
     numCUs=1 # Number of CUs
     workload = None # Initialize workload to give it a scope outside the if 
     numCores=128 # Number of cores
     if   len(sys.argv)  == 1: 
     	 (workload,numCUs) = wl.createWorkload("./workload.json") # Create the workload by using the default file
-	 print("Default paramters: pipeline.json is used as input and it will run on 128 cores")
+	 print("Default paramters: workload.json is used as input and it will run on 128 cores")
     elif len(sys.argv) ==3:  
    	(workload,numCUs) = wl.createWorkload(sys.argv[1]) # Creates the workload according the input file
 	numCores= int(sys.argv[2]) # Number of cores
