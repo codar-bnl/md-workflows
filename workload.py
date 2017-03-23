@@ -15,8 +15,8 @@ def createWorkload(inputFile):
 			stageList.append(taskList)
 			totNumCUs += bof
 			for i in range(0,bof):
-				#cud = CUDef.createGromacsCU(1) ## The number of cores per CU has been set to 1. (hard coded, can be changed). The creation of the CU could stay outside the loop since all the CUs are the same
-            			cud = CUDef.createDateCU() ## Create a /bin/date CU --- Comment the line above and de-comment this one if you want to try /bin/date
+				cud = CUDef.createGromacsCU(1) ## The number of cores per CU has been set to 1. (hard coded, can be changed). The creation of the CU could stay outside the loop since all the CUs are the same
+            			#cud = CUDef.createDateCU() ## Create a /bin/date CU --- Comment the line above and de-comment this one if you want to try /bin/date
 				taskList.append(cud)
 	return (workload,totNumCUs)
 
