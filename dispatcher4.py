@@ -38,14 +38,12 @@ PATH_JSON_LABEL="PathFiles"# Set the path where the event files and envFile are
 ORTE_LABEL = "ornl.titan"
 MAXNUMSIM_JSON_LABEL = "maxNumSim" # Set a maximum number of simulation that will be considered for running
 
-def createWorkload(options,config,withOrte,nodes,generations,seconds):
+def createWorkload(options,config,withOrte,nodes,nthreads,runtime):
 	resource = "ornl.titan_lib"
 	cuList = []
 	
-	runtime = generations*seconds/60+20
-	print(str(seconds)  +" " +  str(generations) + " "+ str(runtime))
-	for i in range(0,nodes*generations*16):
-		cuList+=[CUDef.createSleepCU(seconds)]
+	for i in range(0,nodes*16/nthreads):
+		cuList+=[CUDef.createTAUGromacsCU(nthreads)]
 	print(len(cuList))
 	pd_init = {
                 	'resource'      : resource,
@@ -82,10 +80,10 @@ if __name__ == '__main__':
     #TO DO : This is sound only on TITAN -- It should be adjusted by building a set with all the entries of "config.json" that use ORTE
     withOrte = True
     nnodes = int(sys.argv[1])
-    generations = int(sys.argv[2])
-    seconds = int(sys.argv[3])
+    nthreads = int(sys.argv[2])
+    runtime = int(sys.argv[3])
     options = ru.read_json("./runHomogeneous.json")
-    (pilotDescList,cuList) = createWorkload(options,config,withOrte,nnodes,generations,seconds)
+    (pilotDescList,cuList) = createWorkload(options,config,withOrte,nnodes,nthreads,runtime)
 
     
     
@@ -163,7 +161,6 @@ if __name__ == '__main__':
         # not.  This will kill all remaining pilots.
         report.header('finalize')
         session.close(cleanup=False) 
-    CUDef.saveData("sandboxes",session.uid,"sleep")
     report.header()
 
 

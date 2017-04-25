@@ -3,6 +3,28 @@ import radical.pilot as rp
 ## Hard coded path for gromacs --- Can be removed if the variable $PATH is modfiied for the purpose
 ### MUST BE SET IF THE FOLDER IS NOT ACCESSIBLE 
 PATH="/lustre/atlas/scratch/aleang9/csc108/gromacs/bin/"
+PATHTAU="/ccs/proj/super/TOOLS/tau/tau-2.26.1/x86_64/bin/"
+def createTAUGromacsCU(cores):
+	'''
+	Example -- Creation of a CU descriptor for running gromacs.
+	'''
+	cu = rp.ComputeUnitDescription() # Create a new CU descriptor
+	# Set pre-execution commands
+	cu.pre_exec= []
+	# set  the command to run
+	cu.executable=["./launcher.sh"] 
+	# set the arguments for the executable
+	cu.arguments=[]
+	#cu.arguments=["-T","openmpi",PATH+"gmx_mpi","mdrun","-ntomp","1", "-nb", "cpu","-s","topol.tpr","-c","out.gro"]
+	# Stage the input files
+	cu.input_staging = ["launcher.sh","topol.tpr"]
+	# Set open-mpi
+	cu.mpi = True
+	# Set the number of cores
+	cu.cores=cores
+	return cu
+
+
 
 def createGromacsCU(cores):
 	'''

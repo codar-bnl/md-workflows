@@ -21,31 +21,27 @@ import time
 #------------------------------------------------------------------------------
 #
 if __name__ == '__main__':
-
-     
     # we use a reporter class for nicer output
     report = ru.LogReporter(name='radical.pilot')
     report.title('Getting Started (RP version %s)' % rp.version)
     # use the resource specified as argument, fall back to localhost
-    resource = "ornl.titan" # Type of resource
+    resource = "ornl.titan_lib" # Type of resource
     numCUs=1 # Number of CUs
     workload = None # Initialize workload to give it a scope outside the if 
     numCores=128 # Number of cores
+    nthreads = 1 # Number of threads
+    runtime = 60 # Pilot's walltime
     if   len(sys.argv)  == 1: 
-    	 (workload,numCUs) = wl.createWorkload("./workload.json") # Create the workload by using the default file
+    	 (workload,numCUs) = wl.createWorkload("./workload.json",nthreads) # Create the workload by using the default file
 	 print("Default paramters: workload.json is used as input and it will run on 128 cores")
-    elif len(sys.argv) ==3:  
-   	(workload,numCUs) = wl.createWorkload(sys.argv[1]) # Creates the workload according the input file
-	numCores= int(sys.argv[2]) # Number of cores
+    elif len(sys.argv) ==5:  
+   	(workload,numCUs) = wl.createWorkload(sys.argv[1],nthreads) # Creates the workload according the input file
+	numNodes= int(sys.argv[2]) # Number of cores
+    	nthreads = sys.argv[3]
+    	runtime = sys.argv[4]
     else: 
 	print("Help: python example.py <name input file>.json <# cores>")
 	exit()
-        if numCores > 128:
-		print("This branch of Radical Pilot is still under testing. We recommend to use a number of cores smaller than 128")
-		print("Comment lines 36-39 if you want to increase the number of cores")
-		exit()
-    if numCUs > 512 and numCores < 256:
-		print("Alert: 120 miutes might not be enough to run 512 single thread gromacs simulation with less than 256 cores")
     # Create a new session. No need to try/except this: if session creation
     # fails, there is not much we can do anyways...
     session = rp.Session()
@@ -69,12 +65,12 @@ if __name__ == '__main__':
         # Here we use a dict to initialize the description object
         pd_init = {
                 'resource'      : resource,
-                'runtime'       : 120,  # pilot runtime (min) Set as the maximum allowed in TITAN's fifth bin
+                'runtime'       : runtime,  # pilot runtime (min) Set as the maximum allowed in TITAN's fifth bin
                 'exit_on_error' : True,
                 'project'       : config[resource]['project'],
                 'queue'         : config[resource]['queue'],
                 'access_schema' : config[resource]['schema'],
-                'cores'         : numCores+16, #An additional node must be reserved for ORTE
+                'cores'         : numNodes*16+16, #An additional node must be reserved for ORTE
                 }
         pdesc = rp.ComputePilotDescription(pd_init)
 
