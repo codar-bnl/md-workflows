@@ -14,7 +14,6 @@ def collectData(outputName,indir,nameLog = "info"):
         	for expDir in os.listdir(currSourceDir):
 			currSourceDir+="/"+expDir
        			outputFile.write(dir +  " " + expDir + " ")
-			print(currSourceDir+"/"+ nameLog)
 			if os.path.isfile(currSourceDir+"/"+ nameLog):
 				infoFile = open(currSourceDir+"/"+nameLog)	
 				for line in infoFile:
